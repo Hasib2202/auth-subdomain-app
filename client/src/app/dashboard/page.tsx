@@ -58,26 +58,29 @@ export default function DashboardPage() {
   };
 
   const handleShopClick = (shopName: string) => {
+    console.log("🔍 Environment:", process.env.NODE_ENV);
+    console.log("🔍 Shop clicked:", shopName);
+
     if (process.env.NODE_ENV === "development") {
       // Development: use /shop/[shopName] route
-      window.open(
-        `http://localhost:3000/shop/${shopName.toLowerCase()}`,
-        "_blank"
-      );
+      const url = `http://localhost:3000/shop/${shopName.toLowerCase()}`;
+      console.log("🔍 Opening URL:", url);
+      window.open(url, "_blank");
     } else {
       // Production: Check if we have a custom domain configured
       const currentHost = window.location.host;
+      console.log("🔍 Current host:", currentHost);
 
       if (currentHost.includes("vercel.app")) {
         // If on Vercel's default domain, use path-based routing
-        window.open(
-          `https://${currentHost}/shop/${shopName.toLowerCase()}`,
-          "_blank"
-        );
+        const url = `https://${currentHost}/shop/${shopName.toLowerCase()}`;
+        console.log("🔍 Opening Vercel URL:", url);
+        window.open(url, "_blank");
       } else {
         // If on custom domain, use subdomain routing
         const baseDomain = currentHost.replace(/^[^.]+\./, ""); // Remove subdomain if any
         const subdomain = `https://${shopName.toLowerCase()}.${baseDomain}`;
+        console.log("🔍 Opening custom domain URL:", subdomain);
         window.open(subdomain, "_blank");
       }
     }

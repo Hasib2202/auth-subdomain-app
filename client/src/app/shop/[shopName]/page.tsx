@@ -16,7 +16,18 @@ export default function ShopPage() {
         if (!user) {
           // Redirect to main domain for authentication
           const currentUrl = window.location.href;
-          window.location.href = `http://localhost:3000/signin?redirect=${encodeURIComponent(
+
+          // Get the base URL for the current environment
+          const baseUrl =
+            process.env.NODE_ENV === "production"
+              ? `https://${
+                  window.location.host.includes("vercel.app")
+                    ? window.location.host
+                    : "auth-subdomain-client.vercel.app"
+                }`
+              : "http://localhost:3000";
+
+          window.location.href = `${baseUrl}/signin?redirect=${encodeURIComponent(
             currentUrl
           )}`;
           return;
@@ -41,9 +52,19 @@ export default function ShopPage() {
               This is {shopName} shop
             </h1>
             <button
-              onClick={() =>
-                (window.location.href = "http://localhost:3000/dashboard")
-              }
+              onClick={() => {
+                // Get the base URL for the current environment
+                const baseUrl =
+                  process.env.NODE_ENV === "production"
+                    ? `https://${
+                        window.location.host.includes("vercel.app")
+                          ? window.location.host
+                          : "auth-subdomain-client.vercel.app"
+                      }`
+                    : "http://localhost:3000";
+
+                window.location.href = `${baseUrl}/dashboard`;
+              }}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Back to Dashboard
