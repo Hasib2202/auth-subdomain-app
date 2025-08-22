@@ -6,18 +6,33 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   const pathname = request.nextUrl.pathname;
 
-  // Only handle subdomains, not the main domain
-  if (hostname.includes('.localhost:3000') && !hostname.startsWith('www.')) {
-    const shopName = hostname.split('.')[0];
+  // Development: Handle subdomain routing for localhost
+  if (process.env.NODE_ENV === 'development') {
+    // Only handle subdomains, not the main domain
+    if (hostname.includes('.localhost:3000') && !hostname.startsWith('www.')) {
+      const shopName = hostname.split('.')[0];
 
-    // For the root path on subdomain, rewrite to shop page
-    if (pathname === '/') {
-      return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
+      // For the root path on subdomain, rewrite to shop page
+      if (pathname === '/') {
+        return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
+      }
+
+      // For all other paths on subdomain, let them through normally
+      return NextResponse.next();
     }
+  } else {
+    // Production: Handle subdomain routing for your production domain
+    const productionDomain = 'your-domain.com'; // Replace with your actual domain
+    if (hostname.includes(`.${productionDomain}`) && !hostname.startsWith('www.')) {
+      const shopName = hostname.split('.')[0];
 
-    // For all other paths on subdomain, let them through normally
-    // This prevents redirect loops for signin/signup pages
-    return NextResponse.next();
+      // For the root path on subdomain, rewrite to shop page
+      if (pathname === '/') {
+        return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
+      }
+
+      return NextResponse.next();
+    }
   }
 
   return NextResponse.next();

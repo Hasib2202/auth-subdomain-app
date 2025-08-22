@@ -58,8 +58,18 @@ export default function DashboardPage() {
   };
 
   const handleShopClick = (shopName: string) => {
-    const subdomain = `http://${shopName.toLowerCase()}.localhost:3000`;
-    window.open(subdomain, "_blank");
+    // For development, use query parameters; for production, use subdomains
+    if (process.env.NODE_ENV === "development") {
+      // Development: use /shop/[shopName] route
+      window.open(
+        `http://localhost:3000/shop/${shopName.toLowerCase()}`,
+        "_blank"
+      );
+    } else {
+      // Production: use subdomains
+      const subdomain = `https://${shopName.toLowerCase()}.your-domain.com`;
+      window.open(subdomain, "_blank");
+    }
   };
 
   if (authLoading || loading) {
