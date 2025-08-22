@@ -3,8 +3,6 @@ services:
   - type: pserv
     name: auth-database
     plan: free
-    databaseName: authdb
-    user: authuser
 
   # NestJS Backend API
   - type: web
