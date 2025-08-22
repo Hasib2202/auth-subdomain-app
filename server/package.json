@@ -4,7 +4,7 @@
   "description": "Authentication server with NestJS",
   "main": "dist/main.js",
   "scripts": {
-    "build": "npx nest build",
+    "build": "npx prisma generate && npx prisma db push && npx nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npx nest start",
     "start:dev": "npx nest start --watch",
