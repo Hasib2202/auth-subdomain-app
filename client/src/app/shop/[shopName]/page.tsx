@@ -1,21 +1,24 @@
 // client/src/app/shop/[shopName]/page.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export default function ShopPage() {
   const { shopName } = useParams();
   const { user, loading } = useAuth();
-  const router = useRouter();
   const [isValidating, setIsValidating] = useState(true);
 
   useEffect(() => {
     const validateAccess = async () => {
       if (!loading) {
         if (!user) {
-          router.push('/signin');
+          // Redirect to main domain for authentication
+          const currentUrl = window.location.href;
+          window.location.href = `http://localhost:3000/signin?redirect=${encodeURIComponent(
+            currentUrl
+          )}`;
           return;
         }
         setIsValidating(false);
@@ -23,7 +26,7 @@ export default function ShopPage() {
     };
 
     validateAccess();
-  }, [user, loading, router]);
+  }, [user, loading]);
 
   if (loading || isValidating) {
     return <LoadingSpinner />;
@@ -38,7 +41,9 @@ export default function ShopPage() {
               This is {shopName} shop
             </h1>
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={() =>
+                (window.location.href = "http://localhost:3000/dashboard")
+              }
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Back to Dashboard
