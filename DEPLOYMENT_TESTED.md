@@ -87,6 +87,8 @@ npm run dev
 
 ### 🔧 **RENDER DEPLOYMENT CONFIGURATION**
 
+#### **Option 1: Web Dashboard (if still having issues)**
+
 #### **Build Command**
 
 ```
@@ -106,6 +108,49 @@ npm run start:prod
 ```
 server
 ```
+
+#### **Option 2: Render CLI (RECOMMENDED)**
+
+If web deployment keeps failing, use the Render CLI for better control:
+
+**Step 1: Install Render CLI**
+
+Since there's no Windows binary, you have two options:
+
+**Option A: Use Linux binary with WSL (if you have WSL installed)**
+```bash
+# In WSL terminal
+curl -L https://github.com/render-oss/cli/releases/download/v2.1.4/cli_2.1.4_linux_amd64.zip -o render-cli.zip
+unzip render-cli.zip
+sudo mv cli_2.1.4_linux_amd64 /usr/local/bin/render
+render --version
+```
+
+**Option B: Manual Web Service Creation (EASIER)**
+Instead of CLI, use the web dashboard with exact settings:
+
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click "New +" → "Web Service"
+3. Connect your GitHub repository: `https://github.com/Hasib2202/auth-subdomain-app`
+4. **IMPORTANT SETTINGS:**
+   - **Name**: `auth-subdomain-server` (or your choice)
+   - **Runtime**: `Node`
+   - **Root Directory**: `server` (THIS IS CRITICAL)
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm run start:prod`
+   - **Plan**: `Free`
+
+**Step 2: Environment Variables (CRITICAL)**
+Add these in Render dashboard under Environment:
+```
+DATABASE_URL=postgresql://[your-complete-db-url]
+JWT_SECRET=your-secret-key-here
+NODE_ENV=production
+PORT=10000
+```
+
+**Step 3: Deploy**
+Click "Create Web Service" and monitor the deploy logs.
 
 #### **Environment Variables Required**
 
