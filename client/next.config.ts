@@ -1,7 +1,20 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+// client/next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: '(?<shopName>.*)\\.localhost:3000',
+          },
+        ],
+        destination: '/shop/:shopName',
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

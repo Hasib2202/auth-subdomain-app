@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: auth-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: authdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: auth-server
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/authdb?schema=public
+      - JWT_SECRET=your-super-secret-jwt-key-here
+      - NODE_ENV=development
+    depends_on:
+      - postgres
+    networks:
+      - auth-network
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: auth-client
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - server
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+
+networks:
+  auth-network:
+    driver: bridge
