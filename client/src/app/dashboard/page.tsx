@@ -1,10 +1,10 @@
 // client/src/app/dashboard/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { authService } from '@/lib/auth';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+"use client";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { authService } from "@/lib/auth";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 interface UserProfile {
   id: number;
@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
     // If not authenticated, redirect to signin
     if (!user) {
-      router.push('/signin');
+      router.push("/signin");
       return;
     }
 
@@ -37,9 +37,9 @@ export default function DashboardPage() {
         const profileData = await authService.getProfile();
         setProfile(profileData);
       } catch (error) {
-        console.error('Failed to fetch profile:', error);
+        console.error("Failed to fetch profile:", error);
         // If profile fetch fails, user might not be properly authenticated
-        router.push('/signin');
+        router.push("/signin");
       } finally {
         setLoading(false);
       }
@@ -51,15 +51,15 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.push('/signin');
+      router.push("/signin");
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   const handleShopClick = (shopName: string) => {
     const subdomain = `http://${shopName.toLowerCase()}.localhost:3000`;
-    window.open(subdomain, '_blank');
+    window.open(subdomain, "_blank");
   };
 
   if (authLoading || loading) {
@@ -95,9 +95,11 @@ export default function DashboardPage() {
                     <h3 className="text-lg font-medium text-gray-900 mb-4">
                       Welcome, {profile.username}!
                     </h3>
-                    
+
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Your Shops:</h4>
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">
+                        Your Shops:
+                      </h4>
                       <div className="space-y-2">
                         {profile.shops.map((shop) => (
                           <button
@@ -133,7 +135,7 @@ export default function DashboardPage() {
           <p className="text-xl text-gray-600 mb-12">
             Click on your profile icon to view and access your shops
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {profile.shops.map((shop) => (
               <div
@@ -158,7 +160,9 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
-              <h3 className="text-lg font-medium text-gray-900">Confirm Logout</h3>
+              <h3 className="text-lg font-medium text-gray-900">
+                Confirm Logout
+              </h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">
                   Are you sure you want to logout?
