@@ -93,6 +93,8 @@ npm run dev
 npm run build
 ```
 
+⚠️ **IMPORTANT**: Use `npm run build` NOT `npx nest build` directly. The npm script handles the npx execution.
+
 #### **Start Command**
 
 ```
@@ -162,6 +164,7 @@ Next.js
 - Package.json dependencies fixed
 - Production start script corrected
 - Health checks functional
+- ✅ **CRITICAL FIX**: npx prefix added to nest commands to prevent "nest: not found" errors on Render
 
 **Frontend (Next.js)** ✅ READY FOR VERCEL
 
@@ -177,7 +180,25 @@ Next.js
 4. **Deploy frontend to Vercel**
 5. **Configure custom domain** (optional)
 
+### 🚨 **COMMON DEPLOYMENT ERRORS & FIXES**
+
+#### **Error**: `npm error could not determine executable to run`
+
+**Cause**: Using `npx nest build` directly in Render build command
+**Fix**: Use `npm run build` instead (which internally runs `npx nest build`)
+
+#### **Error**: `sh: 1: nest: not found`
+
+**Cause**: Using `nest build` without npx prefix
+**Fix**: Ensure package.json uses `npx nest build` in scripts
+
+#### **Error**: `Cannot find module '/opt/render/project/src/server/dist/main.js'`
+
+**Cause**: Incorrect start script path
+**Fix**: Use `node dist/src/main.js` in start:prod script
+
 ---
 
-**Last Tested**: August 22, 2025 4:55 PM
+**Last Tested**: August 22, 2025 5:05 PM
 **Status**: ALL SYSTEMS GO! 🚀
+**Latest Fix**: Clarified Render build command should be `npm run build` not `npx nest build`
