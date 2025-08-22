@@ -22,6 +22,9 @@ async function bootstrap() {
       'https://auth-subdomain-client-mh3ehf9wt-hasib2202s-projects.vercel.app',
       /^https:\/\/.*\.vercel\.app$/,
       /^https:\/\/.*\.onrender\.com$/,
+      // Add more permissive patterns for debugging
+      /^https:\/\/.*-hasib2202s-projects\.vercel\.app$/,
+      /^https:\/\/auth-subdomain-client.*\.vercel\.app$/,
     ]
     : [
       'http://localhost:3000',
