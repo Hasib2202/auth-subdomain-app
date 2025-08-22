@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signup(createUserDto: CreateUserDto) {
     const { username, password, shopNames } = createUserDto;
@@ -62,7 +62,7 @@ export class AuthService {
 
     const expiresIn = rememberMe ? '7d' : '30m';
     const payload = { username: user.username, sub: user.id };
-    
+
     return {
       access_token: this.jwtService.sign(payload, { expiresIn }),
       user: { id: user.id, username: user.username },

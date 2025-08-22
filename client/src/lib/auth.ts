@@ -18,6 +18,7 @@ export const authService = {
     shopNames: string[];
   }) => {
     const response = await api.post<AuthResponse>('/auth/signup', data);
+    // Token is automatically stored by api interceptor
     return response.data;
   },
 
@@ -27,11 +28,19 @@ export const authService = {
     rememberMe?: boolean;
   }) => {
     const response = await api.post<AuthResponse>('/auth/login', data);
+    // Token is automatically stored by api interceptor
     return response.data;
   },
 
   logout: async () => {
-    await api.post('/auth/logout');
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      // Even if logout fails on server, clear local token
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('auth_token');
+    }
   },
 
   validate: async () => {
@@ -43,4 +52,12 @@ export const authService = {
     const response = await api.get('/user/profile');
     return response.data;
   },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem('auth_token');
+  },
+
+  getToken: () => {
+    return localStorage.getItem('auth_token');
+  }
 };

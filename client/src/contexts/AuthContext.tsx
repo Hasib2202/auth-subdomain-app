@@ -32,18 +32,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const validateToken = async () => {
+    const checkAuth = async () => {
       try {
-        const response = await authService.validate();
-        setUser(response.user);
-      } catch {
+        // Check if we have a token first
+        if (!authService.isAuthenticated()) {
+          setLoading(false);
+          return;
+        }
+
+        // Try to get user profile using the token
+        const userData = await authService.getProfile();
+        setUser(userData);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        // Token might be invalid, clear it
+        localStorage.removeItem('auth_token');
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
-    validateToken();
+    checkAuth();
   }, []);
 
   const login = async (
