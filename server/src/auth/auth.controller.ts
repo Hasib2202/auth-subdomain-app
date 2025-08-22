@@ -14,16 +14,17 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.signup(createUserDto);
 
-    // Set HTTP-only cookie
+    // Set HTTP-only cookie for additional security
     res.cookie('access_token', result.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
       domain: process.env.NODE_ENV === 'production' ? undefined : '.localhost',
     });
 
+    // Return the token so client can store it in localStorage for cross-origin requests
     return result;
   }
 
@@ -36,15 +37,17 @@ export class AuthController {
       ? 7 * 24 * 60 * 60 * 1000 // 7 days
       : 30 * 60 * 1000; // 30 minutes
 
+    // Set HTTP-only cookie for additional security
     res.cookie('access_token', result.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge,
       path: '/',
       domain: process.env.NODE_ENV === 'production' ? undefined : '.localhost',
     });
 
+    // Return the token so client can store it in localStorage for cross-origin requests
     return result;
   }
 
@@ -53,9 +56,12 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token', {
       path: '/',
+      // Use matching attributes to ensure the cookie is cleared in all environments
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       domain: process.env.NODE_ENV === 'production' ? undefined : '.localhost'
     });
-    return { message: 'Logged out successfully' };
+    return { message: 'Logged out successfully', clearToken: true };
   }
 
   @Get('validate')

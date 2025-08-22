@@ -40,18 +40,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return;
         }
 
+        // Try to validate the token first
+        try {
+          await authService.validate();
+        } catch (validateError) {
+          console.error("Token validation failed:", validateError);
+          // Token is invalid, clear it and don't try to get profile
+          localStorage.removeItem("auth_token");
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
         // Try to get user profile using the token
         const profileData = await authService.getProfile();
         // The profile endpoint returns {id, username, shops}
         setUser({
           id: profileData.id,
           username: profileData.username,
-          shops: profileData.shops
+          shops: profileData.shops,
         });
       } catch (error) {
         console.error("Auth check failed:", error);
         // Token might be invalid, clear it
-        localStorage.removeItem("auth_token");
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("auth_token");
+        }
         setUser(null);
       } finally {
         setLoading(false);
@@ -71,6 +85,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
       rememberMe,
     });
+
+    // Ensure token is stored before setting user
+    if (response.access_token && typeof window !== "undefined") {
+      localStorage.setItem("auth_token", response.access_token);
+    }
+
     setUser(response.user);
   };
 
@@ -84,6 +104,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
       shopNames,
     });
+
+    // Ensure token is stored before setting user
+    if (response.access_token && typeof window !== "undefined") {
+      localStorage.setItem("auth_token", response.access_token);
+    }
+
     setUser(response.user);
   };
 
