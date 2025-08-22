@@ -41,8 +41,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         // Try to get user profile using the token
-        const userData = await authService.getProfile();
-        setUser(userData);
+        const profileData = await authService.getProfile();
+        // The profile endpoint returns {id, username, shops}
+        setUser({
+          id: profileData.id,
+          username: profileData.username,
+          shops: profileData.shops
+        });
       } catch (error) {
         console.error("Auth check failed:", error);
         // Token might be invalid, clear it

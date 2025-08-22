@@ -4,6 +4,7 @@ import api from './api';
 export interface User {
   id: number;
   username: string;
+  shops?: string[]; // Make shops optional since login/signup don't return shops
 }
 
 export interface AuthResponse {
@@ -39,7 +40,10 @@ export const authService = {
       // Even if logout fails on server, clear local token
       console.error('Logout error:', error);
     } finally {
-      localStorage.removeItem('auth_token');
+      // Only clear localStorage on client side
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+      }
     }
   },
 
@@ -54,10 +58,14 @@ export const authService = {
   },
 
   isAuthenticated: () => {
+    // Only check localStorage on client side
+    if (typeof window === 'undefined') return false;
     return !!localStorage.getItem('auth_token');
   },
 
   getToken: () => {
+    // Only access localStorage on client side
+    if (typeof window === 'undefined') return null;
     return localStorage.getItem('auth_token');
   }
 };
