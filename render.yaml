@@ -5,22 +5,18 @@ services:
     plan: free
     databaseName: authdb
     user: authuser
-    region: oregon
 
   # NestJS Backend API
   - type: web
     name: auth-server
-    runtime: node
+    env: node
     plan: free
-    region: oregon
     buildCommand: cd server && npm install && npx prisma generate && npm run build
     startCommand: cd server && npm run start:prod
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: DATABASE_URL
         fromDatabase:
           name: auth-database
@@ -28,14 +24,14 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRATION
-        value: "30m"
+        value: 30m
       - key: JWT_REMEMBER_EXPIRATION
-        value: "7d"
+        value: 7d
       - key: CORS_ORIGIN
-        value: "https://auth-subdomain-client-mh3ehf9wt-hasib2202s-projects.vercel.app,https://*.vercel.app"
+        value: https://auth-subdomain-client-mh3ehf9wt-hasib2202s-projects.vercel.app
       - key: COOKIE_DOMAIN
-        value: ".onrender.com"
+        value: .onrender.com
       - key: COOKIE_SECURE
-        value: "true"
+        value: true
       - key: COOKIE_SAME_SITE
-        value: "none"
+        value: none
