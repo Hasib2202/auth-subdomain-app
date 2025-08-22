@@ -21,9 +21,10 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
   } else {
-    // Production: Handle subdomain routing for your production domain
-    const productionDomain = 'your-domain.com'; // Replace with your actual domain
-    if (hostname.includes(`.${productionDomain}`) && !hostname.startsWith('www.')) {
+    // Production: Handle subdomain routing
+    // Check if this is a subdomain (not the main domain and not www)
+    if (hostname.includes('.') && !hostname.startsWith('www.') && !hostname.endsWith('.vercel.app')) {
+      // This is for custom domains with subdomains
       const shopName = hostname.split('.')[0];
 
       // For the root path on subdomain, rewrite to shop page

@@ -58,7 +58,6 @@ export default function DashboardPage() {
   };
 
   const handleShopClick = (shopName: string) => {
-    // For development, use query parameters; for production, use subdomains
     if (process.env.NODE_ENV === "development") {
       // Development: use /shop/[shopName] route
       window.open(
@@ -66,9 +65,21 @@ export default function DashboardPage() {
         "_blank"
       );
     } else {
-      // Production: use subdomains
-      const subdomain = `https://${shopName.toLowerCase()}.your-domain.com`;
-      window.open(subdomain, "_blank");
+      // Production: Check if we have a custom domain configured
+      const currentHost = window.location.host;
+
+      if (currentHost.includes("vercel.app")) {
+        // If on Vercel's default domain, use path-based routing
+        window.open(
+          `https://${currentHost}/shop/${shopName.toLowerCase()}`,
+          "_blank"
+        );
+      } else {
+        // If on custom domain, use subdomain routing
+        const baseDomain = currentHost.replace(/^[^.]+\./, ""); // Remove subdomain if any
+        const subdomain = `https://${shopName.toLowerCase()}.${baseDomain}`;
+        window.open(subdomain, "_blank");
+      }
     }
   };
 
