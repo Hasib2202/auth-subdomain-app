@@ -118,6 +118,7 @@ If web deployment keeps failing, use the Render CLI for better control:
 Since there's no Windows binary, you have two options:
 
 **Option A: Use Linux binary with WSL (if you have WSL installed)**
+
 ```bash
 # In WSL terminal
 curl -L https://github.com/render-oss/cli/releases/download/v2.1.4/cli_2.1.4_linux_amd64.zip -o render-cli.zip
@@ -142,6 +143,7 @@ Instead of CLI, use the web dashboard with exact settings:
 
 **Step 2: Environment Variables (CRITICAL)**
 Add these in Render dashboard under Environment:
+
 ```
 DATABASE_URL=postgresql://[your-complete-db-url]
 JWT_SECRET=your-secret-key-here
