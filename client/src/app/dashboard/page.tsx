@@ -58,29 +58,25 @@ export default function DashboardPage() {
   };
 
   const handleShopClick = (shopName: string) => {
-    console.log("🔍 Environment:", process.env.NODE_ENV);
-    console.log("🔍 Shop clicked:", shopName);
-
+    // For development: use subdomain routing as required by task
     if (process.env.NODE_ENV === "development") {
-      // Development: use /shop/[shopName] route
-      const url = `http://localhost:3000/shop/${shopName.toLowerCase()}`;
-      console.log("🔍 Opening URL:", url);
-      window.open(url, "_blank");
+      const subdomain = `http://${shopName.toLowerCase()}.localhost:3001`;
+      window.open(subdomain, "_blank");
     } else {
-      // Production: Check if we have a custom domain configured
+      // For production: use Vercel subdomain support
       const currentHost = window.location.host;
-      console.log("🔍 Current host:", currentHost);
 
       if (currentHost.includes("vercel.app")) {
-        // If on Vercel's default domain, use path-based routing
-        const url = `https://${currentHost}/shop/${shopName.toLowerCase()}`;
-        console.log("🔍 Opening Vercel URL:", url);
-        window.open(url, "_blank");
+        // For Vercel deployment, we need custom subdomain configuration
+        // For now, fallback to path-based routing until custom domain is configured
+        window.open(
+          `https://${currentHost}/shop/${shopName.toLowerCase()}`,
+          "_blank"
+        );
       } else {
-        // If on custom domain, use subdomain routing
-        const baseDomain = currentHost.replace(/^[^.]+\./, ""); // Remove subdomain if any
+        // Custom domain with subdomain support
+        const baseDomain = currentHost.replace(/^[^.]+\./, "");
         const subdomain = `https://${shopName.toLowerCase()}.${baseDomain}`;
-        console.log("🔍 Opening custom domain URL:", subdomain);
         window.open(subdomain, "_blank");
       }
     }

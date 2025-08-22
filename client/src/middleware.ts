@@ -6,34 +6,28 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   const pathname = request.nextUrl.pathname;
 
-  // Development: Handle subdomain routing for localhost
-  if (process.env.NODE_ENV === 'development') {
-    // Only handle subdomains, not the main domain
-    if (hostname.includes('.localhost:3000') && !hostname.startsWith('www.')) {
-      const shopName = hostname.split('.')[0];
+  // Handle subdomain routing for development and production
+  if (hostname.includes('.localhost:3001') && !hostname.startsWith('www.')) {
+    // Development subdomain handling
+    const shopName = hostname.split('.')[0];
 
-      // For the root path on subdomain, rewrite to shop page
-      if (pathname === '/') {
-        return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
-      }
-
-      // For all other paths on subdomain, let them through normally
-      return NextResponse.next();
+    // For the root path on subdomain, rewrite to shop page
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
     }
-  } else {
-    // Production: Handle subdomain routing
-    // Check if this is a subdomain (not the main domain and not www)
-    if (hostname.includes('.') && !hostname.startsWith('www.') && !hostname.endsWith('.vercel.app')) {
-      // This is for custom domains with subdomains
-      const shopName = hostname.split('.')[0];
 
-      // For the root path on subdomain, rewrite to shop page
-      if (pathname === '/') {
-        return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
-      }
+    // For all other paths on subdomain, let them through normally
+    return NextResponse.next();
+  } else if (process.env.NODE_ENV === 'production' && hostname.includes('.') && !hostname.startsWith('www.') && !hostname.endsWith('.vercel.app')) {
+    // Production custom domain subdomain handling
+    const shopName = hostname.split('.')[0];
 
-      return NextResponse.next();
+    // For the root path on subdomain, rewrite to shop page
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL(`/shop/${shopName}`, request.url));
     }
+
+    return NextResponse.next();
   }
 
   return NextResponse.next();

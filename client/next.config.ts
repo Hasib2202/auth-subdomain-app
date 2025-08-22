@@ -2,15 +2,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-    // Only enable subdomain rewrites in production
-    if (process.env.NODE_ENV === 'production') {
+    // Development: Handle localhost subdomains
+    if (process.env.NODE_ENV === 'development') {
       return [
         {
           source: '/',
           has: [
             {
               type: 'host',
-              value: '(?<shopName>.*)\\.yourdomain\\.com',  // Replace with your actual domain
+              value: '(?<shopName>.*)\\.localhost:3001',
             },
           ],
           destination: '/shop/:shopName',
@@ -18,8 +18,20 @@ const nextConfig = {
       ];
     }
 
-    // In development, no subdomain rewrites
-    return [];
+    // Production: Handle custom domain subdomains (if you have one)
+    // For Vercel default domains, we use path-based routing in the dashboard
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: '(?<shopName>.*)\\.(?!.*vercel\\.app).*',  // Any subdomain except vercel.app
+          },
+        ],
+        destination: '/shop/:shopName',
+      },
+    ];
   },
 };
 

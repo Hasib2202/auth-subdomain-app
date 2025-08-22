@@ -25,7 +25,7 @@ export default function ShopPage() {
                     ? window.location.host
                     : "auth-subdomain-client.vercel.app"
                 }`
-              : "http://localhost:3000";
+              : "http://localhost:3001";
 
           window.location.href = `${baseUrl}/signin?redirect=${encodeURIComponent(
             currentUrl
@@ -61,7 +61,7 @@ export default function ShopPage() {
                           ? window.location.host
                           : "auth-subdomain-client.vercel.app"
                       }`
-                    : "http://localhost:3000";
+                    : "http://localhost:3001";
 
                 window.location.href = `${baseUrl}/dashboard`;
               }}
