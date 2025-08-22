@@ -17,10 +17,16 @@ export default function DashboardPage() {
   const [showProfile, setShowProfile] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { user, logout } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
+    // Wait for auth context to finish loading
+    if (authLoading) {
+      return;
+    }
+
+    // If not authenticated, redirect to signin
     if (!user) {
       router.push('/signin');
       return;
@@ -32,13 +38,15 @@ export default function DashboardPage() {
         setProfile(profileData);
       } catch (error) {
         console.error('Failed to fetch profile:', error);
+        // If profile fetch fails, user might not be properly authenticated
+        router.push('/signin');
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [user, router]);
+  }, [user, router, authLoading]);
 
   const handleLogout = async () => {
     try {
@@ -54,7 +62,7 @@ export default function DashboardPage() {
     window.open(subdomain, '_blank');
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <LoadingSpinner />;
   }
 
