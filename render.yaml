@@ -9,9 +9,8 @@ services:
     name: auth-server
     env: node
     plan: free
-    rootDir: server
-    buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npm run start:prod
+    buildCommand: cd server && npm install && npx prisma generate && npm run build
+    startCommand: cd server && node dist/main.js
     healthCheckPath: /
     envVars:
       - key: NODE_ENV

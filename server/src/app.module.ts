@@ -9,4 +9,4 @@ import { HealthController } from './health/health.controller';
   imports: [AuthModule, PrismaModule, UserModule],
   controllers: [HealthController],
 })
-export class AppModule {}
+export class AppModule { }
