@@ -1,0 +1,31 @@
+version: 2
+services:
+  server:
+    source: server
+    env:
+      NODE_ENV: production
+      PORT: ${{ PORT }}
+      DATABASE_URL: ${{ DATABASE_URL }}
+      JWT_SECRET: ${{ JWT_SECRET }}
+      CORS_ORIGIN: ${{ CORS_ORIGIN }}
+      COOKIE_DOMAIN: ${{ COOKIE_DOMAIN }}
+    build:
+      commands:
+        - npm install
+        - npx prisma generate
+        - npm run build
+    start:
+      command: npm run start:prod
+    healthcheck:
+      path: /health
+      timeout: 30s
+      interval: 10s
+      retries: 3
+  database:
+    image: postgres:15
+    env:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${{ POSTGRES_PASSWORD }}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
