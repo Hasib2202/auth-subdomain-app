@@ -246,6 +246,13 @@ Next.js
 
 ---
 
-**Last Tested**: August 22, 2025 5:05 PM
-**Status**: ALL SYSTEMS GO! 🚀
-**Latest Fix**: Clarified Render build command should be `npm run build` not `npx nest build`
+**Last Tested**: August 22, 2025 5:20 PM
+**Status**: 🎉 DEPLOYMENT SUCCESSFUL! 🎉
+
+## ✅ **LIVE DEPLOYMENT URLS**
+
+**Backend API**: https://auth-subdomain-server.onrender.com
+**Health Check**: https://auth-subdomain-server.onrender.com/health
+**Frontend**: https://auth-subdomain-client-mh3ehf9wt-hasib2202s-projects.vercel.app
+
+**Latest Update**: Frontend successfully connected to deployed backend
