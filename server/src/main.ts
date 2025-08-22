@@ -19,6 +19,7 @@ async function bootstrap() {
   // Production CORS configuration for Render + Vercel
   const corsOrigins = process.env.NODE_ENV === 'production'
     ? [
+      'https://auth-subdomain-client.vercel.app',
       'https://auth-subdomain-client-mh3ehf9wt-hasib2202s-projects.vercel.app',
       /^https:\/\/.*\.vercel\.app$/,
       /^https:\/\/.*\.onrender\.com$/,

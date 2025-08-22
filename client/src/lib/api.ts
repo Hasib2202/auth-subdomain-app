@@ -29,9 +29,9 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('auth_token');
       // Only redirect if we're not already on login/signup pages
-      if (typeof window !== 'undefined' && 
-          !window.location.pathname.includes('/signin') &&
-          !window.location.pathname.includes('/signup')) {
+      if (typeof window !== 'undefined' &&
+        !window.location.pathname.includes('/signin') &&
+        !window.location.pathname.includes('/signup')) {
         window.location.href = '/signin';
       }
     }

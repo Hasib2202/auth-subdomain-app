@@ -44,9 +44,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userData = await authService.getProfile();
         setUser(userData);
       } catch (error) {
-        console.error('Auth check failed:', error);
+        console.error("Auth check failed:", error);
         // Token might be invalid, clear it
-        localStorage.removeItem('auth_token');
+        localStorage.removeItem("auth_token");
         setUser(null);
       } finally {
         setLoading(false);
