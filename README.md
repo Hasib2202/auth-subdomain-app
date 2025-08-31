@@ -1,4 +1,4 @@
-# Auth Subdomain App :)
+# Auth Subdomain App :) :)
 
 A full-stack authentication application with dynamic subdomain support, built with NestJS backend and Next.js frontend.
 
